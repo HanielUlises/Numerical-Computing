@@ -4,17 +4,14 @@
 #include <iostream>
 
 int main() {
-    float a, b, delta;
-    int maxitr;
+    std::cout << "Testing with f(x) = x³ - 4x - 9:\n";
+    secantMethod(cubic, 2.0f, 3.0f, 10, 0.0001f);
 
-    std::cout << "Enter the initial approximations: ";
-    std::cin >> a >> b;
-    std::cout << "Enter the maximum number of iterations: ";
-    std::cin >> maxitr;
-    std::cout << "Enter the error tolerance limit in the root: ";
-    std::cin >> delta;
+    std::cout << "\nTesting with f(x) = x² - 2:\n";
+    secantMethod([](float x) { return x * x - 2; }, 1.0f, 2.0f, 10, 0.0001f);
 
-    secantMethod(a, b, maxitr, delta);
+    std::cout << "\nTesting with static iteration limit (5 iterations):\n";
+    SecantMethodStatic<5, decltype(cubic), float>::apply(cubic, 2.0f, 3.0f, 0.0001f);
 
     return 0;
 }
