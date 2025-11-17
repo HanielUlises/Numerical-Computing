@@ -61,11 +61,17 @@ class Matrix{
     Matrix<T> hadamard_product(const Matrix<T>& other) const;
     Matrix<T> QRDecomposition(Matrix<T>& Q, Matrix<T>& R) const;
 
+    double& operator()(int row, int col) {
+        return matrix_data[sub_to_index(row, col)];
+    }
+
+    const double& operator()(int row, int col) const {
+        return matrix_data[sub_to_index(row, col)];
+    }
 
     private:
     int sub_to_index(int row, int col) const;
 
-    private:
     int rows, columns, n_elements;
     T* matrix_data;
 };
