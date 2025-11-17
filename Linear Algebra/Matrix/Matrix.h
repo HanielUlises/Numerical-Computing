@@ -1,13 +1,10 @@
-#ifndef MATRIX_H
-#define MATRIX_H
+#pragma once
 
 #include <algorithm> 
 #include <vector>
 #include <stdexcept>
 #include <complex>
 
-// Ontological definition
-// I've always wanted to write this into a .h file (sob)
 template <class T>
 class Matrix{
     public:
@@ -51,6 +48,7 @@ class Matrix{
     Matrix<T> inverse() const;
     T trace() const;
     void fill(T value);
+    Matrix<T> operator-() const;
 
     static Matrix<T> zero_matrix(int n, int m);
     static Matrix<T> identity_matrix(int n);
@@ -71,5 +69,3 @@ class Matrix{
     int rows, columns, n_elements;
     T* matrix_data;
 };
-
-#endif // MATRIX_H

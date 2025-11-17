@@ -519,6 +519,15 @@ Matrix<T> Matrix<T>::hadamard_product(const Matrix<T>& other) const {
     return result;
 }
 
+template <class T>
+Matrix<T> Matrix<T>::operator-() const {
+    Matrix<T> result(rows, columns);
+    for (int i = 0; i < n_elements; ++i) {
+        result.matrix_data[i] = -matrix_data[i];
+    }
+    return result;
+}
+
 template class Matrix<int>;
 template class Matrix<float>;
 template class Matrix<double>;
