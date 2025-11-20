@@ -10,6 +10,7 @@ value_and_partial<T> variable<T>::evaluate_and_derive(variable<T>* var) {
 }
 
 //Addition
+//     f(x) = f₁(x) + f₂(x) + ... + fₙ(x)
 
 template <typename T, typename... Ops>
 plus<T, Ops...>::plus(Ops... ops) : operands(ops...) {
@@ -31,6 +32,7 @@ value_and_partial<T> plus<T, Ops...>::evaluate_and_derive(variable<T>* var) {
 }
 
 // Product
+//     f(x) = f₁(x) · f₂(x) · ... · fₙ(x)
 
 template <typename T, typename... Ops>
 multiply<T, Ops...>::multiply(Ops... ops) : operands(ops...) {

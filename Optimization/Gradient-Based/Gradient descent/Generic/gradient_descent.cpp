@@ -17,7 +17,7 @@ value_and_partial<T> plus<T, Ops...>::evaluate_and_derive(variable<T>* var) {
     value_and_partial<T> result{T(0), T(0)};
     std::apply([&](auto... ops) {
         ((result.value += ops.evaluate_and_derive(var).value,
-          result.partial += ops.evaluate_and_derive(var).partial), ...);
+        result.partial += ops.evaluate_and_derive(var).partial), ...);
     }, operands);
     return result;
 }
@@ -47,7 +47,7 @@ value_and_partial<T> multiply<T, Ops...>::evaluate_and_derive(variable<T>* var) 
 
 template<typename T, typename F>
 void gradient_descent(F objective, std::vector<variable<T>*>& variables, 
-                      T learning_rate, int max_iterations, T tolerance) {
+                    T learning_rate, int max_iterations, T tolerance) {
     int iteration = 0;
     T prev_value = T(0);
     
@@ -95,9 +95,9 @@ int main() {
     auto x_squared = multiply<float, variable<float>&, variable<float>&>(x, x);
     auto y_squared = multiply<float, variable<float>&, variable<float>&>(y, y);
     auto objective = plus<float, 
-                          multiply<float, variable<float>&, variable<float>&>, 
-                          multiply<float, variable<float>&, variable<float>&>>
-                          (x_squared, y_squared);
+                        multiply<float, variable<float>&, variable<float>&>, 
+                        multiply<float, variable<float>&, variable<float>&>>
+                        (x_squared, y_squared);
 
     std::cout << "minimizing f(x, y) = x^2 + y^2:\n";
     gradient_descent(&objective, vars, 0.1f, 50, 0.0001f);

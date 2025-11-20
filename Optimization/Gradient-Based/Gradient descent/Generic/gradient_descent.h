@@ -1,18 +1,25 @@
-#ifndef GRADIENT_DESCENT_H
-#define GRADIENT_DESCENT_H
+#pragma once
 
-#include "../Analysis/Differentiation/autodiff.h"
+#include "../Analysis/Differentiation/AutoDiff/autodiff.h"
 #include <vector>
 #include <iostream>
 
+
 template<typename T, typename F>
-void gradient_descent(F objective, std::vector<variable<T>*>& variables, 
-                      T learning_rate, int max_iterations, T tolerance);
+void gradient_descent(F objective,
+                      std::vector<variable<T>*>& variables,
+                      T learning_rate,
+                      int max_iterations,
+                      T tolerance);
 
-template<int max_iterations, typename T, typename F>
-struct gradient_descent_static {
-    static void apply(F objective, std::vector<variable<T>*>& variables, 
-                      T learning_rate, T tolerance);
-};
-
-#endif // GRADIENT_DESCENT_H
+template<int MaxIterations, typename T, typename F>
+inline void gradient_descent(F objective,
+                             std::vector<variable<T>*>& variables,
+                             T learning_rate,
+                             T tolerance){
+    gradient_descent<T, F>(objective,
+                           variables,
+                           learning_rate,
+                           MaxIterations,
+                           tolerance);
+}
