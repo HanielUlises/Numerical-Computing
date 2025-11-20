@@ -45,18 +45,17 @@ void gradient_descent(F objective,
             gradients.push_back(vp.partial);
         }
 
-        // Update variables: x <- x - lr * grad
+        // Update
+        // x <- x - lr * grad
         for (std::size_t i = 0; i < variables.size(); ++i) {
             variables[i]->value -= learning_rate * gradients[i];
         }
 
-        // Logging (keeps same format as the rest of the project)
         std::cout << "iteration " << (iter + 1) << ":\tvalue = " << current_value;
         for (std::size_t i = 0; i < variables.size(); ++i)
             std::cout << ", x_" << i << " = " << variables[i]->value;
         std::cout << '\n';
 
-        // Convergence check: absolute change in objective value
         if (std::fabs(current_value - prev_value) < tolerance) {
             std::cout << "converged within tolerance.\n";
             return;
