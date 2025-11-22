@@ -1,65 +1,79 @@
-#ifndef VECTOR2D_H_
-#define VECTOR2D_H_
+#pragma once
 
 #include <iostream>
-#include <cmath>
+#include <concepts>
 #include <cassert>
 
 template<typename T>
+concept arithmetic = std::is_arithmetic_v<T>;
+
+template<arithmetic T>
 class Vector2D {
 public:
-    static const Vector2D<T> zero;
+    T x{};
+    T y{};
 
-    Vector2D() : Vector2D(0, 0) {}
-    Vector2D(T x, T y) : mX(x), mY(y) {}
+    static constexpr Vector2D zero{ T(0), T(0) };
 
-    inline void setX(T x) { mX = x; }
-    inline void setY(T y) { mY = y; }
+    // Constructors
+    constexpr Vector2D() = default;
+    constexpr Vector2D(T x, T y);
 
-    inline T getX() const { return mX; }
-    inline T getY() const { return mY; }
+    // Mutators
+    constexpr void set_x(T val) noexcept;
+    constexpr void set_y(T val) noexcept;
 
-    template<typename U>
-    friend std::ostream& operator<<(std::ostream& consoleOut, const Vector2D<U>& vector);
+    // Accessors
+    [[nodiscard]] constexpr T get_x() const noexcept;
+    [[nodiscard]] constexpr T get_y() const noexcept;
 
-    bool operator==(const Vector2D<T>& Vect) const;
-    bool operator!=(const Vector2D<T>& Vect) const;
+    friend std::ostream& operator<<(std::ostream& os, const Vector2D& v);
 
-    Vector2D<T> operator-() const;
-    Vector2D<T> operator*(T scale) const;
-    Vector2D<T> operator/(T scale) const;
-    Vector2D<T>& operator*=(T scale);
-    Vector2D<T>& operator/=(T scale);
+    // Comparison
+    [[nodiscard]] constexpr bool operator==(const Vector2D& other) const noexcept = default;
+    [[nodiscard]] constexpr bool operator!=(const Vector2D& other) const noexcept = default;
 
-    Vector2D<T> operator+(const Vector2D<T>& vec) const;
-    Vector2D<T> operator-(const Vector2D<T>& vec) const;
-    Vector2D<T>& operator+=(const Vector2D<T>& vec);
-    Vector2D<T>& operator-=(const Vector2D<T>& vec);
+    // Unary
+    [[nodiscard]] constexpr Vector2D operator-() const noexcept;
 
-    T Magnitude() const;
-    Vector2D<T> getUnitVect() const;
-    Vector2D<T>& normalizeVect();
+    // Scalar arithmetic
+    [[nodiscard]] constexpr Vector2D operator*(T scalar) const noexcept;
+    [[nodiscard]] Vector2D operator/(T scalar) const;
 
-    T distance(const Vector2D<T>& vec) const;
-    T dotProduct(const Vector2D<T>& vec) const;
-    T crossProduct(const Vector2D<T>& vec) const;
-    T angleBetween(const Vector2D<T>& vec2) const;
-    Vector2D<T> projectOnto(const Vector2D<T>& vec) const;
-    Vector2D<T> reflect(const Vector2D<T>& normal) const;
-    void rotate(T angle, const Vector2D<T>& aroundPoint);
-    void clampMagnitude(T maxMagnitude);
-    Vector2D<T> rotation(T angle, const Vector2D<T>& aroundPoint) const;
-    static Vector2D<T> lerp(const Vector2D<T>& a, const Vector2D<T>& b, T t);
-    static T angleTo(const Vector2D<T>& from, const Vector2D<T>& to);
+    constexpr Vector2D& operator*=(T scalar) noexcept;
+    Vector2D& operator/=(T scalar);
 
-    template<typename U>
-    friend Vector2D<U> operator*(U scalar, const Vector2D<U>& vect);
+    friend constexpr Vector2D operator*(T scalar, const Vector2D& v) noexcept {
+        return v * scalar;
+    }
 
-private:
-    T mX, mY;
+    // Vector arithmetic
+    [[nodiscard]] constexpr Vector2D operator+(const Vector2D& other) const noexcept;
+    [[nodiscard]] constexpr Vector2D operator-(const Vector2D& other) const noexcept;
+
+    constexpr Vector2D& operator+=(const Vector2D& other) noexcept;
+    constexpr Vector2D& operator-=(const Vector2D& other) noexcept;
+
+    // Geometry & utilities
+    [[nodiscard]] constexpr T magnitude_squared() const noexcept;
+    [[nodiscard]] T magnitude() const noexcept;
+
+    [[nodiscard]] Vector2D unit() const;
+    Vector2D& normalize();
+
+    [[nodiscard]] T distance_to(const Vector2D& other) const noexcept;
+    [[nodiscard]] constexpr T dot(const Vector2D& other) const noexcept;
+    [[nodiscard]] constexpr T cross(const Vector2D& other) const noexcept;
+
+    [[nodiscard]] T angle_between(const Vector2D& other) const;
+    [[nodiscard]] Vector2D project_onto(const Vector2D& onto) const;
+    [[nodiscard]] Vector2D reflect_over(const Vector2D& normal) const;
+
+    void rotate(T angle_radians, const Vector2D& around_point = zero);
+    [[nodiscard]] Vector2D rotated(T angle_radians, const Vector2D& around_point = zero) const;
+
+    void clamp_magnitude(T max_magnitude);
+
+    static constexpr Vector2D lerp(const Vector2D& a, const Vector2D& b, T t) noexcept;
+    static T angle_from_to(const Vector2D& from, const Vector2D& to);
 };
-
-template<typename T>
-const Vector2D<T> Vector2D<T>::zero = Vector2D<T>(0, 0);
-
-#endif
