@@ -1,58 +1,206 @@
-#include <iostream>
 #include "Vector2D.h"
+#include "Utils.h"
+#include <cmath>
+#include <cassert>
+#include <numbers>
 
-int main() {
-    // Float datatypes (testing templates)
-    Vector2D<float> vecFloat1(2.0f, 8.0f);
-    Vector2D<float> vecFloat2(3.0f, -4.0f);
-
-    Vector2D<float> negatedVecFloat = -vecFloat1;
-    std::cout << "Negated vecFloat1: " << negatedVecFloat;
-
-    Vector2D<float> scaledUpVecFloat = 2.0f * vecFloat1;
-    Vector2D<float> scaledDownVecFloat = vecFloat1 / 2.0f;
-    std::cout << "Scaled up vecFloat1 (by 2): " << scaledUpVecFloat;
-    std::cout << "Scaled down vecFloat1 (by 2): " << scaledDownVecFloat;
-
-    Vector2D<float> sumVecFloat = vecFloat1 + vecFloat2;
-    Vector2D<float> diffVecFloat = vecFloat1 - vecFloat2;
-    std::cout << "Sum of vecFloat1 and vecFloat2: " << sumVecFloat;
-    std::cout << "Difference between vecFloat1 and vecFloat2: " << diffVecFloat;
-
-    float magnitudeVecFloat1 = vecFloat1.Magnitude();
-    std::cout << "Magnitude of vecFloat1: " << magnitudeVecFloat1 << std::endl;
-
-    Vector2D<float> unitVecFloat = vecFloat1.getUnitVect();
-    std::cout << "Unit vector of vecFloat1: " << unitVecFloat;
-
-    // Double datatypes (testing templates)
-    Vector2D<double> vecDouble1(123.456789, -987.654321);
-    Vector2D<double> vecDouble2(-456.123456, 321.654987);
-
-    Vector2D<double> negatedVecDouble = -vecDouble1;
-    std::cout << "Negated vecDouble1: " << negatedVecDouble;
-
-    Vector2D<double> scaledUpVecDouble = 2.5 * vecDouble1;
-    Vector2D<double> scaledDownVecDouble = vecDouble1 / 2.5;
-    std::cout << "Scaled up vecDouble1 (by 2.5): " << scaledUpVecDouble;
-    std::cout << "Scaled down vecDouble1 (by 2.5): " << scaledDownVecDouble;
-
-    Vector2D<double> sumVecDouble = vecDouble1 + vecDouble2;
-    Vector2D<double> diffVecDouble = vecDouble1 - vecDouble2;
-    std::cout << "Sum of vecDouble1 and vecDouble2: " << sumVecDouble;
-    std::cout << "Difference between vecDouble1 and vecDouble2: " << diffVecDouble;
-
-    double magnitudeVecDouble1 = vecDouble1.Magnitude();
-    std::cout << "Magnitude of vecDouble1: " << magnitudeVecDouble1 << std::endl;
-
-    Vector2D<double> unitVecDouble = vecDouble1.getUnitVect();
-    std::cout << "Unit vector of vecDouble1: " << unitVecDouble;
-
-    return 0;
+template<arithmetic T>
+constexpr Vector2D<T>::Vector2D(T x_val, T y_val)
+    : x(x_val), y(y_val)
+{
 }
 
-template<typename T>
-std::ostream& operator<<(std::ostream& consoleOut, const Vector2D<T>& vector) {
-    consoleOut << "X: " << vector.getX() << " Y: " << vector.getY();
-    return consoleOut;
+template<arithmetic T>
+constexpr void Vector2D<T>::set_x(T val) noexcept { x = val; }
+
+template<arithmetic T>
+constexpr void Vector2D<T>::set_y(T val) noexcept { y = val; }
+
+template<arithmetic T>
+constexpr T Vector2D<T>::get_x() const noexcept { return x; }
+
+template<arithmetic T>
+constexpr T Vector2D<T>::get_y() const noexcept { return y; }
+
+template<arithmetic T>
+std::ostream& operator<<(std::ostream& os, const Vector2D<T>& v)
+{
+    return os << '(' << v.x << ", " << v.y << ')';
 }
+
+template<arithmetic T>
+constexpr Vector2D<T> Vector2D<T>::operator-() const noexcept
+{
+    return {-x, -y};
+}
+
+template<arithmetic T>
+constexpr Vector2D<T> Vector2D<T>::operator*(T scalar) const noexcept
+{
+    return {x * scalar, y * scalar};
+}
+
+template<arithmetic T>
+Vector2D<T> Vector2D<T>::operator/(T scalar) const
+{
+    assert(!nearly_zero(scalar));
+    return {x / scalar, y / scalar};
+}
+
+template<arithmetic T>
+constexpr Vector2D<T>& Vector2D<T>::operator*=(T scalar) noexcept
+{
+    x *= scalar;
+    y *= scalar;
+    return *this;
+}
+
+template<arithmetic T>
+Vector2D<T>& Vector2D<T>::operator/=(T scalar)
+{
+    assert(!nearly_zero(scalar));
+    x /= scalar;
+    y /= scalar;
+    return *this;
+}
+
+template<arithmetic T>
+constexpr Vector2D<T> Vector2D<T>::operator+(const Vector2D<T>& other) const noexcept
+{
+    return {x + other.x, y + other.y};
+}
+
+template<arithmetic T>
+constexpr Vector2D<T> Vector2D<T>::operator-(const Vector2D<T>& other) const noexcept
+{
+    return {x - other.x, y - other.y};
+}
+
+template<arithmetic T>
+constexpr Vector2D<T>& Vector2D<T>::operator+=(const Vector2D<T>& other) noexcept
+{
+    x += other.x;
+    y += other.y;
+    return *this;
+}
+
+template<arithmetic T>
+constexpr Vector2D<T>& Vector2D<T>::operator-=(const Vector2D<T>& other) noexcept
+{
+    x -= other.x;
+    y -= other.y;
+    return *this;
+}
+
+template<arithmetic T>
+constexpr T Vector2D<T>::magnitude_squared() const noexcept
+{
+    return x * x + y * y;
+}
+
+template<arithmetic T>
+T Vector2D<T>::magnitude() const noexcept
+{
+    return std::sqrt(magnitude_squared());
+}
+
+template<arithmetic T>
+Vector2D<T> Vector2D<T>::unit() const
+{
+    const T mag = magnitude();
+    assert(!nearly_zero(mag));
+    return *this / mag;
+}
+
+template<arithmetic T>
+Vector2D<T>& Vector2D<T>::normalize()
+{
+    const T mag = magnitude();
+    assert(!nearly_zero(mag));
+    return *this /= mag;
+}
+
+template<arithmetic T>
+T Vector2D<T>::distance_to(const Vector2D<T>& other) const noexcept
+{
+    return (*this - other).magnitude();
+}
+
+template<arithmetic T>
+constexpr T Vector2D<T>::dot(const Vector2D<T>& other) const noexcept
+{
+    return x * other.x + y * other.y;
+}
+
+template<arithmetic T>
+constexpr T Vector2D<T>::cross(const Vector2D<T>& other) const noexcept
+{
+    return x * other.y - y * other.x;
+}
+
+template<arithmetic T>
+T Vector2D<T>::angle_between(const Vector2D<T>& other) const
+{
+    const T cos_theta = dot(other) / (magnitude() * other.magnitude());
+    return std::acos(std::clamp(cos_theta, T(-1), T(1)));
+}
+
+template<arithmetic T>
+Vector2D<T> Vector2D<T>::project_onto(const Vector2D<T>& onto) const
+{
+    const T denom = onto.magnitude_squared();
+    assert(!nearly_zero(denom));
+    return onto * (dot(onto) / denom);
+}
+
+template<arithmetic T>
+Vector2D<T> Vector2D<T>::reflect_over(const Vector2D<T>& normal) const
+{
+    return *this - normal.unit() * (dot(normal) * T(2));
+}
+
+template<arithmetic T>
+void Vector2D<T>::rotate(T angle_radians, const Vector2D<T>& around_point)
+{
+    const T c = std::cos(angle_radians);
+    const T s = std::sin(angle_radians);
+    const T tx = x - around_point.x;
+    const T ty = y - around_point.y;
+
+    x = tx * c - ty * s + around_point.x;
+    y = tx * s + ty * c + around_point.y;
+}
+
+template<arithmetic T>
+Vector2D<T> Vector2D<T>::rotated(T angle_radians, const Vector2D<T>& around_point) const
+{
+    Vector2D<T> copy = *this;
+    copy.rotate(angle_radians, around_point);
+    return copy;
+}
+
+template<arithmetic T>
+void Vector2D<T>::clamp_magnitude(T max_magnitude)
+{
+    const T mag_sq = magnitude_squared();
+    if (mag_sq > max_magnitude * max_magnitude) {
+        *this *= max_magnitude / std::sqrt(mag_sq);
+    }
+}
+
+template<arithmetic T>
+constexpr Vector2D<T> Vector2D<T>::lerp(const Vector2D<T>& a, const Vector2D<T>& b, T t) noexcept
+{
+    return a + (b - a) * t;
+}
+
+template<arithmetic T>
+T Vector2D<T>::angle_from_to(const Vector2D<T>& from, const Vector2D<T>& to)
+{
+    return std::atan2(to.y - from.y, to.x - from.x);
+}
+
+template class Vector2D<float>;
+template class Vector2D<double>;
+template class Vector2D<int>;
+template class Vector2D<long long>;
