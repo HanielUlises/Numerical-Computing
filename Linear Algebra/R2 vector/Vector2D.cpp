@@ -200,6 +200,150 @@ T Vector2D<T>::angle_from_to(const Vector2D<T>& from, const Vector2D<T>& to)
     return std::atan2(to.y - from.y, to.x - from.x);
 }
 
+template<arithmetic T>
+constexpr T& Vector2D<T>::operator[](std::size_t i)
+{
+    assert(i < 2);
+    return (i == 0 ? x : y);
+}
+
+template<arithmetic T>
+constexpr const T& Vector2D<T>::operator[](std::size_t i) const
+{
+    assert(i < 2);
+    return (i == 0 ? x : y);
+}
+
+template<arithmetic T>
+constexpr Vector2D<T> Vector2D<T>::operator*(const Vector2D<T>& other) const noexcept
+{
+    return { x * other.x, y * other.y };
+}
+
+template<arithmetic T>
+constexpr Vector2D<T> Vector2D<T>::operator/(const Vector2D<T>& other) const
+{
+    assert(!nearly_zero(other.x));
+    assert(!nearly_zero(other.y));
+    return { x / other.x, y / other.y };
+}
+
+template<arithmetic T>
+constexpr Vector2D<T>& Vector2D<T>::operator*=(const Vector2D<T>& other) noexcept
+{
+    x *= other.x;
+    y *= other.y;
+    return *this;
+}
+
+template<arithmetic T>
+Vector2D<T>& Vector2D<T>::operator/=(const Vector2D<T>& other)
+{
+    assert(!nearly_zero(other.x));
+    assert(!nearly_zero(other.y));
+    x /= other.x;
+    y /= other.y;
+    return *this;
+}
+
+template<arithmetic T>
+constexpr Vector2D<T> Vector2D<T>::perpendicular_left() const noexcept
+{
+    return { -y, x };
+}
+
+template<arithmetic T>
+constexpr Vector2D<T> Vector2D<T>::perpendicular_right() const noexcept
+{
+    return { y, -x };
+}
+
+template<arithmetic T>
+constexpr bool Vector2D<T>::is_zero() const noexcept
+{
+    return x == T(0) && y == T(0);
+}
+
+template<arithmetic T>
+constexpr bool Vector2D<T>::nearly_zero(T eps) const noexcept
+{
+    return magnitude_squared() < eps * eps;
+}
+
+template<arithmetic T>
+constexpr void Vector2D<T>::clamp(T min_value, T max_value) noexcept
+{
+    x = std::clamp(x, min_value, max_value);
+    y = std::clamp(y, min_value, max_value);
+}
+
+
+// --- component-wise min/max ---
+
+template<arithmetic T>
+constexpr Vector2D<T> Vector2D<T>::min(const Vector2D<T>& a, const Vector2D<T>& b) noexcept
+{
+    return { std::min(a.x, b.x), std::min(a.y, b.y) };
+}
+
+template<arithmetic T>
+constexpr Vector2D<T> Vector2D<T>::max(const Vector2D<T>& a, const Vector2D<T>& b) noexcept
+{
+    return { std::max(a.x, b.x), std::max(a.y, b.y) };
+}
+
+template<arithmetic T>
+constexpr T Vector2D<T>::determinant(const Vector2D<T>& other) const noexcept
+{
+    return x * other.y - y * other.x;
+}
+
+template<arithmetic T>
+T Vector2D<T>::angle() const noexcept
+{
+    return std::atan2(y, x);
+}
+
+
+
+template<arithmetic T>
+constexpr T Vector2D<T>::deg2rad(T deg) noexcept
+{
+    return deg * T(0.017453292519943295); // π/180
+}
+
+template<arithmetic T>
+constexpr T Vector2D<T>::rad2deg(T rad) noexcept
+{
+    return rad * T(57.29577951308232); // 180/π
+}
+
+template<arithmetic T>
+Vector2D<T> Vector2D<T>::normalized_or_zero() const noexcept
+{
+    const T mag = magnitude();
+    return nearly_zero(mag) ? zero : Vector2D{x / mag, y / mag};
+}
+
+template<arithmetic T>
+Vector2D<T> Vector2D<T>::floor() const noexcept
+{
+    return { std::floor(x), std::floor(y) };
+}
+
+template<arithmetic T>
+Vector2D<T> Vector2D<T>::ceil() const noexcept
+{
+    return { std::ceil(x), std::ceil(y) };
+}
+
+template<arithmetic T>
+Vector2D<T> Vector2D<T>::round() const noexcept
+{
+    return { std::round(x), std::round(y) };
+}
+
+
 template class Vector2D<float>;
 template class Vector2D<double>;
 template class Vector2D<int>;
