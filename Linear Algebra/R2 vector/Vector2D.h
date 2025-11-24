@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <concepts>
-#include <cassert>
 
 template<typename T>
 concept arithmetic = std::is_arithmetic_v<T>;
@@ -13,30 +12,33 @@ public:
     T x{};
     T y{};
 
-    static constexpr Vector2D zero{ T(0), T(0) };
+    static const Vector2D zero;
 
-    // Constructors
-    constexpr Vector2D() = default;
+    // ctors
+    constexpr Vector2D();
     constexpr Vector2D(T x, T y);
 
-    // Mutators
+    // mutators
     constexpr void set_x(T val) noexcept;
     constexpr void set_y(T val) noexcept;
 
-    // Accessors
+    // accessors
     [[nodiscard]] constexpr T get_x() const noexcept;
     [[nodiscard]] constexpr T get_y() const noexcept;
 
-    friend std::ostream& operator<<(std::ostream& os, const Vector2D& v);
+    // stream
+    friend std::ostream& operator<<(std::ostream& os, const Vector2D& v) {
+        return os << '(' << v.x << ", " << v.y << ')';
+    }
 
-    // Comparison
+    // comparison
     [[nodiscard]] constexpr bool operator==(const Vector2D& other) const noexcept = default;
     [[nodiscard]] constexpr bool operator!=(const Vector2D& other) const noexcept = default;
 
-    // Unary
+    // unary
     [[nodiscard]] constexpr Vector2D operator-() const noexcept;
 
-    // Scalar arithmetic
+    // scalar ops
     [[nodiscard]] constexpr Vector2D operator*(T scalar) const noexcept;
     [[nodiscard]] Vector2D operator/(T scalar) const;
 
@@ -47,14 +49,14 @@ public:
         return v * scalar;
     }
 
-    // Vector arithmetic
+    // vector ops
     [[nodiscard]] constexpr Vector2D operator+(const Vector2D& other) const noexcept;
     [[nodiscard]] constexpr Vector2D operator-(const Vector2D& other) const noexcept;
 
     constexpr Vector2D& operator+=(const Vector2D& other) noexcept;
     constexpr Vector2D& operator-=(const Vector2D& other) noexcept;
 
-    // Geometry & utilities
+    // geometry
     [[nodiscard]] constexpr T magnitude_squared() const noexcept;
     [[nodiscard]] T magnitude() const noexcept;
 
@@ -76,4 +78,48 @@ public:
 
     static constexpr Vector2D lerp(const Vector2D& a, const Vector2D& b, T t) noexcept;
     static T angle_from_to(const Vector2D& from, const Vector2D& to);
+
+    constexpr T& operator[](std::size_t i);
+    constexpr const T& operator[](std::size_t i) const;
+
+    constexpr Vector2D operator*(const Vector2D& other) const noexcept;
+    constexpr Vector2D operator/(const Vector2D& other) const;
+    constexpr Vector2D& operator*=(const Vector2D& other) noexcept;
+    Vector2D& operator/=(const Vector2D& other);
+
+    // perpendiculars
+    [[nodiscard]] constexpr Vector2D perpendicular_left() const noexcept;
+    [[nodiscard]] constexpr Vector2D perpendicular_right() const noexcept;
+
+    // zero checks
+    [[nodiscard]] constexpr bool is_zero() const noexcept;
+    [[nodiscard]] constexpr bool nearly_zero(T eps = T(1e-6)) const noexcept;
+
+    // component clamping
+    constexpr void clamp(T min_value, T max_value) noexcept;
+
+    // component-wise min/max
+    static constexpr Vector2D min(const Vector2D& a, const Vector2D& b) noexcept;
+    static constexpr Vector2D max(const Vector2D& a, const Vector2D& b) noexcept;
+
+    // determinant alias
+    constexpr T determinant(const Vector2D& other) const noexcept;
+
+    // polar angle
+    [[nodiscard]] T angle() const noexcept;
+
+    // conversion
+    static constexpr T deg2rad(T deg) noexcept;
+    static constexpr T rad2deg(T rad) noexcept;
+
+    [[nodiscard]] Vector2D normalized_or_zero() const noexcept;
+
+    // floor/ceil/round
+    [[nodiscard]] Vector2D floor() const noexcept;
+    [[nodiscard]] Vector2D ceil() const noexcept;
+    [[nodiscard]] Vector2D round() const noexcept;
 };
+
+template<arithmetic T>
+inline const Vector2D<T> Vector2D<T>::zero{ T(0), T(0) };
+
