@@ -30,3 +30,33 @@
 *.exe
 *.out
 *.app
+
+# CMake generated files and directories
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+CMakeScripts/
+Testing/
+Makefile
+CTestTestfile.cmake
+compile_commands.json  # Optional: ignore if you regenerate it; some share it
+_deps/
+*-prefix/
+
+# User-specific CMake files (from IDEs)
+CMakeLists.txt.user
+CMakeUserPresets.json
+
+# Common build directories (out-of-source builds)
+build/
+build*/
+out/
+cmake-build-*/
+cmake-build-debug/
+cmake-build-release/
+
+# Optional: other common ignores
+*.ninja
+.ninja_deps
+.ninja_log
