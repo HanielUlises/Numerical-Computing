@@ -28,6 +28,7 @@ A central direction of the project is to connect these numerical algorithms with
 
 Instead of treating an algorithm as something that operates on a specific type such as `double`, `std::vector`, or a particular matrix implementation, the goal is to identify the algebraic properties that are actually required.
 
+```text
 Classical Numerical Algorithm
             ↓
 Mathematical Analysis
@@ -39,3 +40,4 @@ Generic C++ Abstraction
 Concepts and Constraints
             ↓
 Reusable Scientific Algorithm
+```
