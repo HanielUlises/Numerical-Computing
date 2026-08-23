@@ -1,3 +1,0 @@
-C:/Users/Vasquez/Projects/Numerical-Analysis/Analysis/Differentiation/Symbolic Differentiation/build/CMakeFiles/symbolic_diff.dir
-C:/Users/Vasquez/Projects/Numerical-Analysis/Analysis/Differentiation/Symbolic Differentiation/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/Vasquez/Projects/Numerical-Analysis/Analysis/Differentiation/Symbolic Differentiation/build/CMakeFiles/ZERO_CHECK.dir
