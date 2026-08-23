@@ -1,4 +1,4 @@
-# Numerical Analysis with the C++ Programming Language
+# Algebraic Scientific Computing in Modern C++
 
 This repository contains implementations and experiments in **numerical analysis and scientific computing using modern C++**, with an additional focus on understanding the **algebraic structures underlying numerical algorithms**.
 
