@@ -60,3 +60,5 @@ cmake-build-release/
 *.ninja
 .ninja_deps
 .ninja_log
+
+.vscode/*
