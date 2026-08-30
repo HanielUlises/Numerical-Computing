@@ -12,6 +12,21 @@ struct DistanceType<R(*)(A)> {
 template <typename T>
 using DistanceType_t = typename DistanceType<T>::type;
 
+template<typename F>
+requires Transformation<F>
+DistanceType_t<F> distance(Domain_t<F> x, Domain_t<F> y, F f)
+{
+    using N = DistanceType_t<F>;
+
+    N n(0);
+    while (x != y) {
+        x = f(x);
+        n = n + N(1);
+    }
+    return n;
+}
+
+
 // Domain of an operation
 template <typename T>
 struct Domain;
