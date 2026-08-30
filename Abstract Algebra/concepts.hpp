@@ -24,6 +24,8 @@ concept Counter =
         { n + N(1) } -> std::same_as<N>;
     };
 
+template <typename N>
+concept UnsignedInteger = std::unsigned_integral<N>;
 
 /**
  * @brief Provides the domain type associated with an operation.
