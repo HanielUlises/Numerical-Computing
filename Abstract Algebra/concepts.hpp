@@ -12,6 +12,10 @@ concept DistanceTransformation =
     Transformation<F> &&
     EqualityComparable<Domain_t<F>>;
 
+template <typename F>
+requires DistanceTransformation<F>
+DistanceType_t<F> distance(Domain_t<F> x, Domain_t<F> y, F f);
+
 /**
  * @brief Provides the domain type associated with an operation.
  *
