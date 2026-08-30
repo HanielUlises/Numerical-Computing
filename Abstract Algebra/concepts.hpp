@@ -1,6 +1,17 @@
 #include <concepts>
 #include <type_traits>
 
+template <typename T>
+struct DistanceType;
+
+template <typename R, typename A>
+struct DistanceType<R(*)(A)> {
+    using type = std::make_unsigned_t<A>;
+};
+
+template <typename T>
+using DistanceType_t = typename DistanceType<T>::type;
+
 // Domain of an operation
 template <typename T>
 struct Domain;
