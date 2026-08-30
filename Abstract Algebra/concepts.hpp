@@ -4,6 +4,14 @@
 #include <type_traits>
 #include <utility>
 
+template <typename T>
+concept EqualityComparable = std::equality_comparable<T>;
+
+template <typename F>
+concept DistanceTransformation =
+    Transformation<F> &&
+    EqualityComparable<Domain_t<F>>;
+
 /**
  * @brief Provides the domain type associated with an operation.
  *
