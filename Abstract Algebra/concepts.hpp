@@ -16,6 +16,15 @@ template <typename F>
 requires DistanceTransformation<F>
 DistanceType_t<F> distance(Domain_t<F> x, Domain_t<F> y, F f);
 
+template <typename N>
+concept Counter =
+    std::integral<N> &&
+    std::constructible_from<N, int> &&
+    requires(N n) {
+        { n + N(1) } -> std::same_as<N>;
+    };
+
+
 /**
  * @brief Provides the domain type associated with an operation.
  *
