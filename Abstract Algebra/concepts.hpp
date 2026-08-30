@@ -26,6 +26,16 @@ DistanceType_t<F> distance(Domain_t<F> x, Domain_t<F> y, F f)
     return n;
 }
 
+template <typename T>
+struct DistanceType;
+
+template <typename R, typename A>
+struct DistanceType<R(*)(A)> {
+    using type = A;
+};
+
+template <typename T>
+using DistanceType_t = typename DistanceType<T>::type;
 
 // Domain of an operation
 template <typename T>
