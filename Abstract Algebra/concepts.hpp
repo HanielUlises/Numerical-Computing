@@ -53,3 +53,16 @@ Domain_t<F> power_unary(Domain_t<F> x, N n, F f)
 
     return x;
 }
+
+template<typename F>
+requires(Transformation(F))
+DistanceType(F) distance(Domain(F) x, Domain(F) y, F f) {
+    // Precondition: y is reachable from x under f
+    typedef DistanceType(F) N;
+    N n(0);
+    while (x != y) {
+        x = f(x);
+        n = n + N(1);
+    }
+    return n;
+}
